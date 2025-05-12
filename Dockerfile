@@ -19,11 +19,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # to the /app directory in the container. This includes your 'api' folder, 'util' folder, etc.
 COPY . /app/
 
-# Command to run your application.
-# Gunicorn will:
-# 1. Change its working directory to /app/api (because of --chdir api).
-# 2. Look for a file named view.py and an object named 'app' within it (view:app).
-# 3. Start 4 worker processes (-w 4).
-# 4. Bind to all available IP addresses (0.0.0.0) on the port specified by
-#    the $PORT environment variable (Railway will provide this).
-CMD ["gunicorn", "--chdir", "api", "view:app", "-w", "4", "-b", "0.0.0.0:$PORT"]
+# Command to run your application using sh -c to ensure $PORT expansion
+CMD ["sh", "-c", "gunicorn --chdir api view:app -w 4 -b 0.0.0.0:$PORT"]
